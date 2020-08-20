@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>回顾Object.defineProperty实现的数据双向绑定</title>
+</head>
+<body>
+  <script>
+    // 简单的观察者模式 obj没有嵌套结构
+    let obj = {
+      name: '小王'
+    }
+    observer(obj)
+    obj.name = '小李'
+
+    function observer(obj) {
+      if(typeof obj !== 'object' || obj == null) {  // 排除对象
+        return obj
+      }
+      for(let key in obj) {
+        definedReactive(obj, key, obj[key])
+      }
+    }
+
+    function definedReactive(obj, key, value) {
+      Object.defineProperty(obj, key, {
+        get() {
+          return value
+        },
+        set(newValue) {
+          if(newValue !== value) {
+            console.log('数据更新了……')
+            value = newValue
+          }
+        }
+      })
+    }
+  </script>
+</body>
+</html>
